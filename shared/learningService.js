@@ -7,7 +7,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+
+// Gerador simples de IDs (sem dependência externa)
+function generateId() {
+    return Math.random().toString(36).substring(2, 10);
+}
 
 const PENDING_FILE = path.join(__dirname, 'pendingQuestions.json');
 const LEARNED_FILE = path.join(__dirname, 'learnedResponses.json');
@@ -93,7 +97,7 @@ class LearningService {
     // GERENCIAMENTO DE PERGUNTAS PENDENTES
     // ==========================================
     addPendingQuestion(clientJid, clientName, question) {
-        const id = uuidv4().substring(0, 8);
+        const id = generateId();
         const pending = {
             id,
             clientJid,

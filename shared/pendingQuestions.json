@@ -15,6 +15,22 @@
       "question": "qual custa um curso de vocês?",
       "timestamp": "2026-01-22T19:58:19.223Z",
       "status": "answered"
+    },
+    {
+      "id": "7ddfd5e1",
+      "clientJid": "5521990338405@s.whatsapp.net",
+      "clientName": "Pablo",
+      "question": "pkg update && pkg install nodejs git -y\ngit clone https://github.com/pabloporto2002/botwpp.git\ncd botwpp/baileys\nnpm install",
+      "timestamp": "2026-01-22T21:18:15.186Z",
+      "status": "pending"
+    },
+    {
+      "id": "1c4a6909",
+      "clientJid": "5521990338405@s.whatsapp.net",
+      "clientName": "Pablo",
+      "question": "nano ../.env\n\nnpm start",
+      "timestamp": "2026-01-22T21:18:46.152Z",
+      "status": "pending"
     }
   ]
 }
