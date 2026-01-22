@@ -2,9 +2,9 @@
   "responses": [
     {
       "keywords": [
-        "abrir",
+        "abrir carnaval",
         "carnaval",
-        "feriado",
+        "feriado carnaval",
         "funcionar carnaval",
         "funcionamento carnaval"
       ],
@@ -14,8 +14,11 @@
     },
     {
       "keywords": [
-        "custa",
-        "curso"
+        "quanto custa",
+        "valor curso",
+        "preço curso",
+        "custo curso",
+        "valores"
       ],
       "question": "qual custa um curso de vocês?",
       "answer": "Olá! Sou o assistente virtual da *Silfer Concursos* em Nova Iguaçu, sua porta de entrada para a carreira militar! 👋\n\nEntendo sua pergunta sobre os valores dos nossos cursos. 😉 O investimento em sua preparação pode variar conforme o curso escolhido e o edital que você tem em mente (PMERJ, CBMERJ, etc.).\n\nNa *Silfer*, acreditamos que a sua aprovação não é um *custo*, mas sim um *investimento* inteligente no seu futuro e na sua carreira militar! 🚀\n\nPara te apresentar as melhores opções e todos os detalhes dos nossos planos de estudo e valores, um de nossos consultores especializados _entrará em contato_ com você em breve. Assim, podemos conversar sobre seus objetivos e encontrar o curso ideal para você conquistar sua vaga! Sua aprovação é a nossa prioridade! 🥇\n\n_Nossa Missão: Sua Aprovação!_\n\n_Digite *MENU* para voltar ao início._",

@@ -58,21 +58,47 @@ class LearningService {
     findLearnedResponse(userMessage) {
         const msgLower = userMessage.toLowerCase().trim();
 
+        let bestMatch = null;
+        let bestScore = 0;
+
         for (const resp of this.learnedResponses.responses) {
-            // Verifica se alguma keyword bate
-            for (const kw of resp.keywords || []) {
+            const keywords = resp.keywords || [];
+            if (keywords.length === 0) continue;
+
+            // Conta quantas keywords da resposta batem com a mensagem
+            let matchCount = 0;
+            for (const kw of keywords) {
                 if (msgLower.includes(kw.toLowerCase())) {
-                    console.log(`[Learning] Resposta aprendida encontrada para: "${kw}"`);
-                    return resp.answer;
+                    matchCount++;
                 }
             }
 
-            // Verifica similaridade com a pergunta original
+            // Calcula score (percentual de keywords que bateram)
+            const score = matchCount / keywords.length;
+
+            // Requer pelo menos 40% das keywords OU pelo menos 2 matches
+            // Isso evita que uma keyword genérica como "curso" dê match sozinha
+            if (score >= 0.4 || matchCount >= 2) {
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = resp;
+                }
+            }
+        }
+
+        if (bestMatch) {
+            console.log(`[Learning] Resposta aprendida encontrada (score: ${(bestScore * 100).toFixed(0)}%)`);
+            return bestMatch.answer;
+        }
+
+        // Verifica similaridade com a pergunta original
+        for (const resp of this.learnedResponses.responses) {
             if (resp.question && this.isSimilar(msgLower, resp.question.toLowerCase())) {
                 console.log(`[Learning] Pergunta similar encontrada`);
                 return resp.answer;
             }
         }
+
         return null;
     }
 
