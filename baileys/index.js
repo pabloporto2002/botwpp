@@ -250,6 +250,17 @@ async function connectToWhatsApp() {
             console.log(`[Mensagem] Texto: ${userMessage}`);
 
             // ==========================================
+            // VERIFICA RESPOSTA DO ADMIN (PRIORIDADE!)
+            // ==========================================
+            if (phoneNumber === learningService.getAdminNumber()) {
+                const wasAdminResponse = await processAdminResponse(userMessage);
+                if (wasAdminResponse) {
+                    return; // Era uma resposta do admin, já processamos
+                }
+                // Se não era formato de resposta (#ID ...), processa normalmente
+            }
+
+            // ==========================================
             // SISTEMA DE IDENTIFICAÇÃO DE USUÁRIOS
             // ==========================================
 
@@ -316,15 +327,6 @@ async function connectToWhatsApp() {
             // Usuário conhecido - usa nome salvo
             const userName = userService.getUserName(phoneNumber);
             console.log(`[UserService] Usuário conhecido: ${userName}`);
-
-            // Verifica se é mensagem do admin com resposta
-            if (phoneNumber === learningService.getAdminNumber()) {
-                const wasAdminResponse = await processAdminResponse(userMessage);
-                if (wasAdminResponse) {
-                    return; // Era uma resposta, já processamos
-                }
-                // Se não era formato de resposta, processa normalmente
-            }
 
             // Processa a mensagem
             const result = await responseHandler.processMessage(userMessage, {
