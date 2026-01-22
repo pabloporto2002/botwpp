@@ -243,7 +243,7 @@ class LearningService {
     // ==========================================
     parseAdminResponse(text) {
         // Formato esperado: #ID resposta
-        const match = text.match(/^#([a-f0-9]+)\s+(.+)/is);
+        const match = text.match(/^#([a-z0-9]+)\s+(.+)/is);
 
         if (match) {
             return {
