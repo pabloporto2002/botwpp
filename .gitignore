@@ -1,0 +1,38 @@
+# Dependências
+node_modules/
+package-lock.json
+
+# Arquivos de ambiente (SENSÍVEIS - NÃO COMMITAR!)
+.env
+
+# Pastas de autenticação do WhatsApp (SENSÍVEIS!)
+auth_*/
+baileys/auth_*/
+
+# QR Codes gerados
+*.jpg
+qrcode.jpg
+qrcode.png
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Resultados de exploração (opcional - pode remover se quiser versionar)
+flowchart_result.json
+flowchart_result.md
+
+# Brain do Antigravity (IDE)
+.gemini/

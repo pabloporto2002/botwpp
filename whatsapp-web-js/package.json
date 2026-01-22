@@ -1,0 +1,17 @@
+{
+    "name": "silfer-bot-whatsapp-web-js",
+    "version": "1.0.0",
+    "description": "Bot WhatsApp Silfer Concursos - Versão whatsapp-web.js",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "whatsapp-web.js": "^1.23.0",
+        "qrcode-terminal": "^0.12.0",
+        "@google/generative-ai": "^0.1.3",
+        "dotenv": "^16.3.1"
+    },
+    "author": "Silfer Concursos",
+    "license": "MIT"
+}

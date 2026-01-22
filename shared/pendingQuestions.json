@@ -1,0 +1,20 @@
+{
+  "questions": [
+    {
+      "id": "265c4aec",
+      "clientJid": "5521990338405@s.whatsapp.net",
+      "clientName": "Pablo",
+      "question": "vai abrir no carnaval?",
+      "timestamp": "2026-01-22T19:50:17.868Z",
+      "status": "answered"
+    },
+    {
+      "id": "29c0843b",
+      "clientJid": "5521990338405@s.whatsapp.net",
+      "clientName": "Pablo",
+      "question": "qual custa um curso de vocês?",
+      "timestamp": "2026-01-22T19:58:19.223Z",
+      "status": "answered"
+    }
+  ]
+}
