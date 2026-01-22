@@ -21,6 +21,7 @@ const { exec } = require('child_process');
 const responseHandler = require('../shared/responseHandler');
 const learningService = require('../shared/learningService');
 const userService = require('../shared/userService');
+const conversationService = require('../shared/conversationService');
 
 const sessionName = process.env.SESSION_NAME || 'silfer-bot';
 const authFolder = `./auth_${sessionName}`;
@@ -342,29 +343,71 @@ async function connectToWhatsApp() {
                 await sendMessage(from, result.text);
                 console.log(`[Resposta] Enviada com sucesso`);
 
+                // Salva no histórico
+                conversationService.addMessage(phoneNumber, 'user', userMessage);
+                conversationService.addMessage(phoneNumber, 'bot', result.text.substring(0, 200));
+
                 // Se enviou o MENU, inicia timer de follow-up
-                if (result.text.includes('Como posso ajudá-lo hoje?')) {
+                if (result.text.includes('Como posso ajudá-lo hoje?') || result.text.includes('Como posso ajudar?')) {
                     startFollowUpTimer(from);
                 }
             }
 
-            // Pergunta desconhecida - encaminha ao admin
+            // Pergunta desconhecida - analisa com Gemini antes de encaminhar
             else if (result.type === 'unknown') {
-                // Adiciona à fila de pendentes
-                const pending = learningService.addPendingQuestion(
-                    from,
-                    pushName,
-                    userMessage
+                // Obtém nome e histórico
+                const clientName = userService.getUserName(phoneNumber) || pushName;
+                const historyText = conversationService.getHistoryAsText(phoneNumber);
+
+                console.log(`[SmartFilter] Analisando mensagem com Gemini...`);
+
+                // Analisa a mensagem com Gemini
+                const analysis = await responseHandler.analyzeUnknownMessage(
+                    userMessage,
+                    historyText,
+                    clientName
                 );
 
-                // Envia mensagem de espera ao cliente
-                await sendMessage(from, learningService.getPendingResponseMessage());
-                console.log(`[Learning] Cliente informado que vamos verificar`);
+                console.log(`[SmartFilter] Ação: ${analysis.action}`);
 
-                // Encaminha ao admin
-                const adminMessage = learningService.getAdminForwardMessage(pending);
-                await sendMessage(learningService.getAdminJid(), adminMessage);
-                console.log(`[Learning] Pergunta encaminhada ao admin`);
+                // Salva no histórico
+                conversationService.addMessage(phoneNumber, 'user', userMessage);
+
+                if (analysis.action === 'clarify') {
+                    // Pede esclarecimento
+                    await sendMessage(from, analysis.response);
+                    conversationService.addMessage(phoneNumber, 'bot', analysis.response);
+                    console.log(`[SmartFilter] Pediu esclarecimento`);
+                }
+                else if (analysis.action === 'reject') {
+                    // Recusa educadamente
+                    await sendMessage(from, analysis.response);
+                    conversationService.addMessage(phoneNumber, 'bot', analysis.response);
+                    console.log(`[SmartFilter] Recusou pergunta fora do escopo`);
+                }
+                else if (analysis.action === 'answer') {
+                    // Gemini responde diretamente
+                    await sendMessage(from, analysis.response);
+                    conversationService.addMessage(phoneNumber, 'bot', analysis.response);
+                    console.log(`[SmartFilter] Gemini respondeu diretamente`);
+                }
+                else {
+                    // FORWARD - Encaminha ao admin com contexto
+                    const questionToForward = analysis.contextualizedQuestion || userMessage;
+
+                    const pending = learningService.addPendingQuestion(
+                        from,
+                        clientName,
+                        questionToForward
+                    );
+
+                    await sendMessage(from, learningService.getPendingResponseMessage());
+                    conversationService.addMessage(phoneNumber, 'bot', 'Vou verificar com a equipe...');
+                    console.log(`[SmartFilter] Encaminhando ao admin`);
+
+                    const adminMessage = learningService.getAdminForwardMessage(pending);
+                    await sendMessage(learningService.getAdminJid(), adminMessage);
+                }
             }
 
         } catch (error) {
