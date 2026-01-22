@@ -50,16 +50,53 @@ class UserService {
     }
 
     /**
+     * Obtém todos os dados do usuário
+     */
+    getUserData(phoneNumber) {
+        return this.users.users[phoneNumber] || null;
+    }
+
+    /**
      * Salva usuário com nome confirmado
      */
     saveUser(phoneNumber, name, whatsappName = null) {
+        const existingData = this.users.users[phoneNumber] || {};
         this.users.users[phoneNumber] = {
+            ...existingData,
             name: name,
             whatsappName: whatsappName,
-            confirmedAt: new Date().toISOString()
+            confirmedAt: existingData.confirmedAt || new Date().toISOString(),
+            lastInteraction: new Date().toISOString()
         };
         this.save();
         console.log(`[UserService] Usuário salvo: ${phoneNumber} → ${name}`);
+    }
+
+    /**
+     * Atualiza dados adicionais do usuário (email, interesses, notas)
+     */
+    updateUserData(phoneNumber, data) {
+        if (!this.users.users[phoneNumber]) {
+            this.users.users[phoneNumber] = {};
+        }
+
+        this.users.users[phoneNumber] = {
+            ...this.users.users[phoneNumber],
+            ...data,
+            lastInteraction: new Date().toISOString()
+        };
+        this.save();
+        console.log(`[UserService] Dados atualizados para: ${phoneNumber}`);
+    }
+
+    /**
+     * Atualiza última interação do usuário
+     */
+    updateLastInteraction(phoneNumber) {
+        if (this.users.users[phoneNumber]) {
+            this.users.users[phoneNumber].lastInteraction = new Date().toISOString();
+            this.save();
+        }
     }
 
     /**
@@ -74,6 +111,42 @@ class UserService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Gera resumo do perfil do usuário para contexto do Gemini
+     * (Privado - só dados desse usuário específico)
+     */
+    getContextForGemini(phoneNumber) {
+        const user = this.users.users[phoneNumber];
+        if (!user) return 'Usuário novo, ainda não temos informações sobre ele.';
+
+        const contextParts = [];
+
+        contextParts.push(`Nome: ${user.name || 'Não informado'}`);
+
+        if (user.email) {
+            contextParts.push(`Email: ${user.email}`);
+        }
+
+        if (user.cursosInteresse) {
+            contextParts.push(`Cursos de interesse: ${user.cursosInteresse}`);
+        }
+
+        if (user.concursoAlvo) {
+            contextParts.push(`Concurso alvo: ${user.concursoAlvo}`);
+        }
+
+        if (user.notas) {
+            contextParts.push(`Observações: ${user.notas}`);
+        }
+
+        if (user.confirmedAt) {
+            const dataRegistro = new Date(user.confirmedAt).toLocaleDateString('pt-BR');
+            contextParts.push(`Cliente desde: ${dataRegistro}`);
+        }
+
+        return contextParts.join('\n');
     }
 
     // ==========================================
