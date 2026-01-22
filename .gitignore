@@ -5,6 +5,9 @@ package-lock.json
 # Arquivos de ambiente (SENSÍVEIS - NÃO COMMITAR!)
 .env
 
+# Base de dados de usuários (PRIVACIDADE!)
+shared/usersDatabase.json
+
 # Pastas de autenticação do WhatsApp (SENSÍVEIS!)
 auth_*/
 baileys/auth_*/

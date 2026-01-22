@@ -20,6 +20,7 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const responseHandler = require('../shared/responseHandler');
 const learningService = require('../shared/learningService');
+const userService = require('../shared/userService');
 
 const sessionName = process.env.SESSION_NAME || 'silfer-bot';
 const authFolder = `./auth_${sessionName}`;
@@ -246,6 +247,74 @@ async function connectToWhatsApp() {
 
             console.log(`\n[Mensagem] De: ${pushName} (${phoneNumber})`);
             console.log(`[Mensagem] Texto: ${userMessage}`);
+
+            // ==========================================
+            // SISTEMA DE IDENTIFICAÇÃO DE USUÁRIOS
+            // ==========================================
+
+            // Verifica se usuário quer mudar o nome
+            const nameChangeRequest = userService.detectNameChangeRequest(userMessage);
+            if (nameChangeRequest && userService.isKnownUser(phoneNumber)) {
+                if (nameChangeRequest === 'ASK_NEW_NAME') {
+                    userService.setState(phoneNumber, 'awaiting_new_name');
+                    await sendMessage(from, '😊 Claro! Como você quer que eu te chame?');
+                    return;
+                } else {
+                    userService.updateName(phoneNumber, nameChangeRequest);
+                    await sendMessage(from, userService.getNameChangedMessage(nameChangeRequest));
+                    return;
+                }
+            }
+
+            // Verifica estado de conversa (aguardando resposta de identificação)
+            const state = userService.getState(phoneNumber);
+
+            if (state) {
+                // Aguardando confirmação do nome
+                if (state.state === 'awaiting_name_confirmation') {
+                    if (userService.isPositiveResponse(userMessage)) {
+                        // Confirmou o nome
+                        userService.saveUser(phoneNumber, state.data.whatsappName, state.data.whatsappName);
+                        userService.clearState(phoneNumber);
+                        await sendMessage(from, userService.getWelcomeMessage(state.data.whatsappName));
+                        startFollowUpTimer(from);
+                        return;
+                    } else if (userService.isNegativeResponse(userMessage)) {
+                        // Negou o nome, pergunta o correto
+                        userService.setState(phoneNumber, 'awaiting_name_input', state.data);
+                        await sendMessage(from, userService.getAskNameMessage());
+                        return;
+                    }
+                    // Se não for sim/não claro, continua perguntando
+                    await sendMessage(from, 'Não entendi... Responda *SIM* ou *NÃO* 😅');
+                    return;
+                }
+
+                // Aguardando input do nome
+                if (state.state === 'awaiting_name_input' || state.state === 'awaiting_new_name') {
+                    const newName = userMessage.trim().split(/\s+/)[0]; // Pega primeiro nome
+                    if (newName.length > 1 && newName.length < 30) {
+                        userService.saveUser(phoneNumber, newName, state.data?.whatsappName || pushName);
+                        userService.clearState(phoneNumber);
+                        await sendMessage(from, userService.getWelcomeMessage(newName));
+                        startFollowUpTimer(from);
+                        return;
+                    }
+                    await sendMessage(from, 'Por favor, me diga seu nome 😊');
+                    return;
+                }
+            }
+
+            // Usuário não está no banco - inicia identificação
+            if (!userService.isKnownUser(phoneNumber)) {
+                userService.setState(phoneNumber, 'awaiting_name_confirmation', { whatsappName: pushName });
+                await sendMessage(from, userService.getNameConfirmationMessage(pushName));
+                return;
+            }
+
+            // Usuário conhecido - usa nome salvo
+            const userName = userService.getUserName(phoneNumber);
+            console.log(`[UserService] Usuário conhecido: ${userName}`);
 
             // Verifica se é mensagem do admin com resposta
             if (phoneNumber === learningService.getAdminNumber()) {
