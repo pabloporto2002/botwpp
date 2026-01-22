@@ -252,12 +252,21 @@ async function connectToWhatsApp() {
             // ==========================================
             // VERIFICA RESPOSTA DO ADMIN (PRIORIDADE!)
             // ==========================================
-            if (phoneNumber === learningService.getAdminNumber()) {
+            const adminNumber = learningService.getAdminNumber();
+            console.log(`[Debug] phoneNumber: "${phoneNumber}" | adminNumber: "${adminNumber}" | match: ${phoneNumber === adminNumber}`);
+
+            // Também verifica se começa com #
+            if (userMessage.startsWith('#')) {
+                console.log(`[Debug] Mensagem começa com # - tentando processar como resposta admin`);
                 const wasAdminResponse = await processAdminResponse(userMessage);
                 if (wasAdminResponse) {
                     return; // Era uma resposta do admin, já processamos
                 }
-                // Se não era formato de resposta (#ID ...), processa normalmente
+            } else if (phoneNumber === adminNumber) {
+                const wasAdminResponse = await processAdminResponse(userMessage);
+                if (wasAdminResponse) {
+                    return;
+                }
             }
 
             // ==========================================
