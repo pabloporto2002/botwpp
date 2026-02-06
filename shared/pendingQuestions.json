@@ -31,6 +31,38 @@
       "question": "nano ../.env\n\nnpm start",
       "timestamp": "2026-01-22T21:18:46.152Z",
       "status": "pending"
+    },
+    {
+      "id": "2xeoi8t6",
+      "clientJid": "238014286528719@lid",
+      "clientName": "Pablo",
+      "question": "Cliente Pablo perguntou sobre a abertura de cursos presenciais para o CBMERJ. Necessita de informações sobre turmas para este concurso.",
+      "timestamp": "2026-02-06T02:47:11.800Z",
+      "status": "answered"
+    },
+    {
+      "id": "pymq1uwi",
+      "clientJid": "238014286528719@lid",
+      "clientName": "Pablo",
+      "question": "O cliente (Pablo) gostaria de saber se a Silfer Concursos vende cursos para outras áreas ou concursos, além do PMERJ 2026.",
+      "timestamp": "2026-02-06T16:11:58.493Z",
+      "status": "answered"
+    },
+    {
+      "id": "2d0r53ms",
+      "clientJid": "230253951713479@lid",
+      "clientName": "Caio",
+      "question": "Como o Caio pode realizar o pagamento da matrícula/mensalidades com cartão presencialmente na unidade da Silfer Concursos?",
+      "timestamp": "2026-02-06T17:14:39.223Z",
+      "status": "answered"
+    },
+    {
+      "id": "66nu28p0",
+      "clientJid": "238014286528719@lid",
+      "clientName": "Pablo",
+      "question": "Pablo gostaria de saber se é possível efetuar o pagamento presencial.",
+      "timestamp": "2026-02-06T17:49:56.465Z",
+      "status": "answered"
     }
   ]
 }

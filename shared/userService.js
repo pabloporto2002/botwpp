@@ -15,6 +15,8 @@ const conversationStates = new Map();
 class UserService {
     constructor() {
         this.users = this.loadUsers();
+        // Limpa usuários inativos há mais de 30 dias na inicialização
+        this.cleanupInactiveUsers(30);
     }
 
     loadUsers() {
@@ -96,6 +98,30 @@ class UserService {
         if (this.users.users[phoneNumber]) {
             this.users.users[phoneNumber].lastInteraction = new Date().toISOString();
             this.save();
+        }
+    }
+
+    /**
+     * Remove usuários inativos há mais de X dias
+     */
+    cleanupInactiveUsers(days = 30) {
+        const now = Date.now();
+        const maxAge = days * 24 * 60 * 60 * 1000; // dias em ms
+        let removed = 0;
+
+        for (const phone in this.users.users) {
+            const user = this.users.users[phone];
+            const lastInteraction = user.lastInteraction ? new Date(user.lastInteraction).getTime() : 0;
+
+            if (now - lastInteraction > maxAge) {
+                delete this.users.users[phone];
+                removed++;
+            }
+        }
+
+        if (removed > 0) {
+            this.save();
+            console.log(`[UserService] Limpeza: ${removed} usuário(s) inativo(s) há +${days} dias removido(s)`);
         }
     }
 
@@ -188,34 +214,75 @@ class UserService {
     // MENSAGENS
     // ==========================================
 
+    /**
+     * Retorna saudação baseada no horário
+     */
+    getGreeting() {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return 'Bom dia';
+        if (hour >= 12 && hour < 18) return 'Boa tarde';
+        return 'Boa noite';
+    }
+
     getNameConfirmationMessage(whatsappName) {
-        return `👋 Olá! Antes de começarmos...\n\n` +
-            `Estou falando com *${whatsappName}*? 🤔\n\n` +
+        const greeting = this.getGreeting();
+        return `👋 ${greeting}! Tudo bem?\n\n` +
+            `Posso te chamar de *${whatsappName}*? 🤔\n\n` +
             `Responda *SIM* ou *NÃO*`;
     }
 
     getAskNameMessage() {
-        return `😊 Sem problemas! Como posso te chamar?`;
+        return `😊 Tranquilo! Como prefere que eu te chame?`;
     }
 
+    /**
+     * Retorna mensagem de boas-vindas do JSON
+     * Substitui {nome} e {saudacao} dinamicamente
+     */
     getWelcomeMessage(name) {
-        return `✨ Prazer em conhecer você, *${name}*!\n\n` +
-            `A partir de agora vou me lembrar de você! 💾\n\n` +
-            `━━━━━━━━━━━━━━━\n\n` +
-            `👋 *Olá, ${name}! Bem-vindo à Silfer Concursos!*\n\n` +
-            `🎯 _Nossa Missão: Sua Aprovação!_\n\n` +
-            `Como posso ajudar?\n\n` +
+        try {
+            const responseHandler = require('./responseHandler');
+            let msg = responseHandler.getWelcomeMessage();
+            const saudacao = this.getGreeting();
+            msg = msg.replace('{nome}', name || 'Cliente');
+            msg = msg.replace('{saudacao}', saudacao);
+            return msg;
+        } catch {
+            const saudacao = this.getGreeting();
+            return `*Olá, ${name || 'Cliente'}! ${saudacao}! Bem-vindo(a) à SILFER CONCURSOS!* 👮‍♂️\n\nDigite *MENU* para ver as opções.`;
+        }
+    }
+
+    /**
+     * Retorna menu principal
+     */
+    getMenuMessage() {
+        try {
+            const responseHandler = require('./responseHandler');
+            return responseHandler.getMenuMessage();
+        } catch {
+            return 'Digite *MENU* para ver as opções.';
+        }
+    }
+
+    getNameChangedMessage(newName) {
+        return `✅ Pronto! A partir de agora vou te chamar de *${newName}*! 😊\n\n` +
+            `_Digite *MENU* para ver as opções._`;
+    }
+
+    /**
+     * Mensagem de retorno para usuário conhecido
+     */
+    getReturningUserMessage(name) {
+        const greeting = this.getGreeting();
+        return `👋 *${greeting}, ${name}!* Que bom te ver de novo! 😊\n\n` +
+            `Como posso ajudar hoje?\n\n` +
             `*1* - 💻 Cursos Online\n` +
             `*2* - 🏫 Cursos Presenciais\n` +
             `*3* - 🕐 Horário de Funcionamento\n` +
             `*4* - 📍 Localização\n` +
             `*5* - 👨‍🏫 Nossos Professores\n` +
             `*6* - 💬 Falar com Atendente`;
-    }
-
-    getNameChangedMessage(newName) {
-        return `✅ Pronto! A partir de agora vou te chamar de *${newName}*! 😊\n\n` +
-            `_Digite *MENU* para ver as opções._`;
     }
 
     // ==========================================
