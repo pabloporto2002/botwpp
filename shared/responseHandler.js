@@ -156,7 +156,127 @@ class ResponseHandler {
         return responses[Math.floor(Math.random() * responses.length)];
     }
 
+    // ==========================================
+    // DETECÇÃO DE FRUSTRAÇÃO E TRANSFERÊNCIA
+    // ==========================================
 
+    // Mapa para rastrear tentativas de frustração por usuário
+    frustrationRetries = new Map();
+
+    /**
+     * Verifica se usuário está explicitamente pedindo atendente
+     */
+    isExplicitAttendantRequest(message) {
+        const normalized = this.normalizeText(message);
+        const attendantPhrases = [
+            // Pedidos diretos
+            'falar com atendente', 'quero atendente', 'chama atendente',
+            'falar com alguem', 'falar com alguém', 'falar com pessoa',
+            'falar com humano', 'quero falar com pessoa', 'quero humano',
+            'atendente humano', 'pessoa real', 'atendimento humano',
+            'preciso de atendente', 'me transfere', 'transferir',
+            'chamar atendente', 'ligar para atendente',
+            // Variações informais
+            'quero um atendente', 'quero uma pessoa', 'me passa pra alguem',
+            'passa pra atendente', 'chama um atendente', 'chama alguem',
+            'me chama atendente', 'preciso falar com pessoa',
+            'nao quero robo', 'não quero robô', 'nao quero ia',
+            'falar com gente', 'gente de verdade', 'pessoa de verdade',
+            // Bem curtos
+            'atendente', 'humano', 'pessoa real'
+        ];
+        return attendantPhrases.some(p => normalized.includes(p) || normalized === p);
+    }
+
+    /**
+     * Verifica se usuário está frustrado/nervoso/confuso
+     */
+    isFrustrated(message) {
+        const normalized = this.normalizeText(message);
+        const frustrationPhrases = [
+            // Raiva/Irritação
+            'que droga', 'que merda', 'pqp', 'caramba', 'porra',
+            'nao funciona', 'não funciona', 'nao ta funcionando', 'não tá funcionando',
+            'isso nao ajuda', 'isso não ajuda', 'voce nao ajuda', 'você não ajuda',
+            'inutil', 'inútil', 'lixo', 'horrivel', 'horrível', 'pessimo', 'péssimo',
+            'que saco', 'cansado disso', 'cansada disso',
+            // Confusão
+            'nao entendo', 'não entendo', 'nao consigo', 'não consigo',
+            'nao sei usar', 'não sei usar', 'como funciona isso',
+            'ta dificil', 'tá difícil', 'muito confuso', 'confusa', 'confuso',
+            'nao sei oq fazer', 'não sei o que fazer', 'perdido', 'perdida',
+            // Desistência
+            'desisto', 'vou desistir', 'esquece', 'deixa pra la', 'deixa pra lá',
+            'tanto faz', 'cansei', 'chega', 'para com isso',
+            // Reclamação da IA
+            'robo burro', 'robô burro', 'ia burra', 'bot burro',
+            'nao entende nada', 'não entende nada', 'voce e burro', 'você é burro',
+            'resposta errada', 'ta errado', 'tá errado', 'isso ta errado',
+            'nao era isso', 'não era isso', 'nao foi isso que perguntei',
+            // Frustração geral
+            'af', 'aff', 'afff', 'mds', 'meu deus', 'pelo amor', 'cruz credo',
+            'socorro', 'help', 'me ajuda', 'alguem me ajuda'
+        ];
+        return frustrationPhrases.some(p => normalized.includes(p) || normalized === p);
+    }
+
+    /**
+     * Obtém contagem de tentativas de frustração do usuário
+     */
+    getFrustrationRetryCount(phone) {
+        return this.frustrationRetries.get(phone) || 0;
+    }
+
+    /**
+     * Incrementa contador de tentativas de frustração
+     */
+    incrementFrustrationRetry(phone) {
+        const current = this.getFrustrationRetryCount(phone);
+        this.frustrationRetries.set(phone, current + 1);
+        return current + 1;
+    }
+
+    /**
+     * Reseta contador de frustração
+     */
+    resetFrustrationRetry(phone) {
+        this.frustrationRetries.delete(phone);
+    }
+
+    /**
+     * Mensagem de pedido de desculpas (primeira tentativa)
+     */
+    getApologyMessage() {
+        return '😔 *Desculpe!* Parece que não estou conseguindo te ajudar da melhor forma.\n\n' +
+            'Deixa eu tentar de novo! 💪\n\n' +
+            'Pode me contar o que você precisa? Estou aqui para responder qualquer dúvida sobre:\n' +
+            '• 🕒 *Turmas e Horários*\n' +
+            '• 📍 *Localização*\n' +
+            '• 💳 *Investimento e Matrícula*\n\n' +
+            '_É só perguntar que eu respondo!_ 😊';
+    }
+
+    /**
+     * Mensagem oferecendo transferência (após limite)
+     */
+    getOfferTransferMessage() {
+        return '😔 *Mil desculpas!* Parece que não estou conseguindo te ajudar como você merece.\n\n' +
+            'O que você prefere?\n\n' +
+            '*1* - 🔄 Tentar perguntar de outro jeito\n' +
+            '*2* - 👨‍💼 Falar com um atendente humano\n\n' +
+            '_Responda 1 ou 2!_';
+    }
+
+    /**
+     * Mensagem de transferência confirmada
+     */
+    getTransferMessage() {
+        return '👨‍💼 *Transferindo para um atendente!*\n\n' +
+            'Em instantes, um de nossos atendentes humanos vai te responder. 😊\n\n' +
+            '⚡ *Quer agilizar?* Preencha nosso formulário:\n' +
+            '👉 https://silferconcursos.com.br/formulario\n\n' +
+            '_Assim que preencher, nossa equipe entra em contato mais rápido!_';
+    }
     /**
      * Verifica se é seleção de turma específica
      */

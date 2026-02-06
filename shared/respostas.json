@@ -40,7 +40,7 @@
   "menu_principal": {
     "opcao_1": {
       "emoji": "🕒",
-      "titulo": "Escolha a sua Turma",
+      "titulo": "Turma e Horário",
       "gatilhos": [
         "1",
         "turma",
@@ -127,14 +127,14 @@
     }
   },
   "mensagens": {
-    "boas_vindas": "*Olá, {nome}! {saudacao}! Bem-vindo(a) à SILFER CONCURSOS* 👮‍♂️\n\nQue prazer receber seu contato! Estamos prontos para te ajudar a conquistar sua aprovação nos mais diversos concursos militares e policiais da atualidade. No momento, estamos com matrículas abertas para o *Concurso de Soldado da PMERJ 2026*.\n\nSomos o único curso preparatório, 100% presencial, *dentro da Faculdade Estácio de Sá, em Nova Iguaçu*.\n\n📋 *Como posso ajudar?*\n\n*1* - 🕒 Escolha a sua Turma\n*2* - 📍 Localização\n*3* - 💳 Investimento e Matrícula\n*4* - 💬 Falar com Atendente\n\n> 💡 _Ou, se preferir, é só escrever sua dúvida diretamente que nosso atendente virtual responde na hora!_",
+    "boas_vindas": "*Olá, {nome}! {saudacao}! Bem-vindo(a) à SILFER CONCURSOS* 👮‍♂️\n\nQue prazer receber seu contato! Estamos prontos para te ajudar a conquistar sua aprovação nos mais diversos concursos militares e policiais da atualidade. No momento, estamos com matrículas abertas para o *Concurso de Soldado da PMERJ 2026*.\n\nSomos o único curso preparatório, 100% presencial, *dentro da Faculdade Estácio de Sá, em Nova Iguaçu*.\n\n📋 *Como posso ajudar?*\n\n*1* - 🕒 Turma e Horário\n*2* - 📍 Localização\n*3* - 💳 Investimento e Matrícula\n\n> 💡 _Ou, se preferir, é só escrever sua dúvida diretamente que nosso atendente virtual responde na hora!_",
     "turmas": "🕒 *Escolha a sua Turma:*\n\nPara atender a todos os perfis de concurseiro, teremos duas modalidades de horários:\n\n*1. Turma Semanal (Noite):* Teoria + Muitos Exercícios.\n• Início: 02/03/2026\n• Dias: Segunda a Sexta-feira\n• Horário: 19h às 22h\n_Ideal para quem prefere manter um ritmo de estudo diário e tem disponibilidade no período noturno._\n\n*2. Turma aos Sábados:* Teoria + Muitos Exercícios, garantindo a mesma qualidade da turma semanal.\n• Início: 07/03/2026\n• Dias: Sábados\n• Horário: 09h às 17h\n_Criada especificamente para concurseiros que possuem dificuldade de horários durante a semana._\n\n━━━━━━━━━━━━━━━\n📝 Digite 1 ou 2 para escolher sua turma!\n💬 Digite *MENU* para voltar às opções.",
     "turma_semanal": "✅ *Ótima escolha!* Você selecionou a *Turma Semanal (Noite)*!\n\n📅 Início: 02/03/2026\n🕐 Segunda a Sexta, 19h às 22h\n\n📝 *Preencha o formulário abaixo para garantir sua vaga:*\n👉 https://silferconcursos.com.br/formulario\n\n👨‍💼 _Em instantes, um de nossos atendentes entrará em contato para finalizar sua matrícula!_",
     "turma_sabado": "✅ *Ótima escolha!* Você selecionou a *Turma aos Sábados*!\n\n📅 Início: 07/03/2026\n🕐 Sábados, 09h às 17h\n\n📝 *Preencha o formulário abaixo para garantir sua vaga:*\n👉 https://silferconcursos.com.br/formulario\n\n👨‍💼 _Em instantes, um de nossos atendentes entrará em contato para finalizar sua matrícula!_",
     "localizacao": "📍 *Localização Privilegiada*\n\nEstude com segurança e conforto em um ambiente acadêmico:\n\n• *Local:* Dentro da Faculdade ESTÁCIO DE SÁ (Próximo à fábrica da Granfino)\n• *Endereço:* Rua Oscar Soares, 1466 - Centro, Nova Iguaçu - RJ\n\n━━━━━━━━━━━━━━━\n💬 Digite *MENU* para voltar às opções.",
     "investimento": "💳 *Investimento e Matrícula*\n\nGarantir o seu futuro é um investimento acessível:\n\n💰 *Parcelamento no Cartão:* 10x de R$ 147,00\n📝 *Taxa de Matrícula:* R$ 50,00\n\n✨ _Invista na sua aprovação!_\n\n━━━━━━━━━━━━━━━\n💬 Digite *MENU* para voltar às opções.",
     "atendimento": "📞 *Atendimento Humanizado*\n\nEm instantes, um de nossos atendentes estará disponível para te ajudar! 😊\n\n⚡ *Quer agilizar seu atendimento?*\nPreencha nosso formulário de pré-matrícula:\n👉 https://silferconcursos.com.br/formulario\n\n_Assim que preencher, nossa equipe entrará em contato com você!_",
-    "menu": "📋 *Como posso ajudar?*\n\n*1* - 🕒 Escolha a sua Turma\n*2* - 📍 Localização\n*3* - 💳 Investimento e Matrícula\n*4* - 💬 Falar com Atendente",
+    "menu": "📋 *Como posso ajudar?*\n\n*1* - 🕒 Turma e Horário\n*2* - 📍 Localização\n*3* - 💳 Investimento e Matrícula\n\n> 💡 _Ou, se preferir, é só escrever sua dúvida diretamente que nosso atendente virtual responde na hora!_",
     "nao_entendi": "🤔 Não entendi sua mensagem.\n\nDigite *MENU* para ver as opções disponíveis ou aguarde que um atendente irá te responder em breve!"
   },
   "respostas_aprendidas": {}

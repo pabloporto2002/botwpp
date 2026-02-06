@@ -33,6 +33,81 @@ class UserService {
     }
 
     // ==========================================
+    // SANITIZAÇÃO DE NOMES
+    // ==========================================
+
+    /**
+     * Sanitiza nome: remove emojis, números, símbolos
+     * e extrai apenas o primeiro nome (ou primeiro+segundo se primeiro <= 2 chars)
+     */
+    sanitizeName(rawName) {
+        if (!rawName || typeof rawName !== 'string') return null;
+
+        // 1. Remove emojis (Unicode ranges)
+        let cleaned = rawName
+            .replace(/[\u{1F300}-\u{1F9FF}]/gu, '') // Emojis diversos
+            .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Símbolos misc
+            .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
+            .replace(/[\u{FE00}-\u{FE0F}]/gu, '')   // Variation selectors
+            .replace(/[\u{200D}]/gu, '')            // Zero-width joiner
+            .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Flags
+            .replace(/[\u{E0000}-\u{E007F}]/gu, '') // Tags
+            .replace(/[\u{1F000}-\u{1FFFF}]/gu, ''); // Extended emojis
+
+        // 2. Remove números
+        cleaned = cleaned.replace(/[0-9]/g, '');
+
+        // 3. Remove símbolos e caracteres especiais (mantém letras, espaços, acentos, hífen)
+        cleaned = cleaned.replace(/[^\p{L}\s\-']/gu, '');
+
+        // 4. Remove espaços extras e trim
+        cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+        if (!cleaned || cleaned.length < 2) return null;
+
+        // 5. Divide em palavras
+        const words = cleaned.split(' ').filter(w => w.length > 0);
+        if (words.length === 0) return null;
+
+        // 6. Pega primeiro nome (ou primeiro+segundo se primeiro <= 2 chars)
+        let firstName = words[0];
+        if (firstName.length <= 2 && words.length > 1) {
+            firstName = words[0] + ' ' + words[1];
+        }
+
+        // 7. Capitaliza corretamente
+        firstName = firstName
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+
+        return firstName;
+    }
+
+    /**
+     * Limpa todos os nomes existentes no banco de dados
+     */
+    cleanupAllNames() {
+        let updated = 0;
+        for (const phone in this.users.users) {
+            const user = this.users.users[phone];
+            if (user.name) {
+                const cleanedName = this.sanitizeName(user.name);
+                if (cleanedName && cleanedName !== user.name) {
+                    console.log(`[UserService] Limpando nome: "${user.name}" → "${cleanedName}"`);
+                    this.users.users[phone].name = cleanedName;
+                    updated++;
+                }
+            }
+        }
+        if (updated > 0) {
+            this.save();
+            console.log(`[UserService] ${updated} nome(s) limpo(s)`);
+        }
+        return updated;
+    }
+
+    // ==========================================
     // GERENCIAMENTO DE USUÁRIOS
     // ==========================================
 
@@ -60,18 +135,22 @@ class UserService {
 
     /**
      * Salva usuário com nome confirmado
+     * Aplica sanitização automaticamente
      */
     saveUser(phoneNumber, name, whatsappName = null) {
+        // Sanitiza o nome antes de salvar
+        const sanitizedName = this.sanitizeName(name) || name;
+
         const existingData = this.users.users[phoneNumber] || {};
         this.users.users[phoneNumber] = {
             ...existingData,
-            name: name,
+            name: sanitizedName,
             whatsappName: whatsappName,
             confirmedAt: existingData.confirmedAt || new Date().toISOString(),
             lastInteraction: new Date().toISOString()
         };
         this.save();
-        console.log(`[UserService] Usuário salvo: ${phoneNumber} → ${name}`);
+        console.log(`[UserService] Usuário salvo: ${phoneNumber} → ${sanitizedName}`);
     }
 
     /**
