@@ -39,3 +39,7 @@ flowchart_result.md
 
 # Brain do Antigravity (IDE)
 .gemini/
+
+# Chave SSH Oracle Cloud (NUNCA commitar!)
+*.key
+.key

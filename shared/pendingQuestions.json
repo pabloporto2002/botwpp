@@ -63,6 +63,22 @@
       "question": "Pablo gostaria de saber se é possível efetuar o pagamento presencial.",
       "timestamp": "2026-02-06T17:49:56.465Z",
       "status": "answered"
+    },
+    {
+      "id": "xw4u1j4o",
+      "clientJid": "232336406921469@lid",
+      "clientName": "Maria",
+      "question": "O cliente Maria perguntou sobre a possibilidade de pagar o curso de forma parcelada durante o período, que não seja necessariamente através do parcelamento em cartão de crédito (ex: pagamentos mensais via boleto ou Pix), ou se há outros planos de pagamento alternativos à opção de 10x no cartão. Por favor, entre em contato com ela para detalhar as opções.",
+      "timestamp": "2026-02-06T22:24:04.823Z",
+      "status": "answered"
+    },
+    {
+      "id": "h2889ao3",
+      "clientJid": "232336406921469@lid",
+      "clientName": "Maria",
+      "question": "A cliente Maria mencionou que 'N tenho cartão no momento' ao ser informada sobre o parcelamento. Quais são as opções de pagamento alternativas para matrícula e parcelamento do curso PMERJ 2026 (ex: boleto, PIX, débito, dinheiro)?",
+      "timestamp": "2026-02-06T22:24:10.932Z",
+      "status": "answered"
     }
   ]
 }
