@@ -341,14 +341,16 @@ class ClusterService {
 
         // Eu tenho prioridade maior que o master atual?
         if (this.priority < masterDevice.priority) {
-            // Verificar se master está ocioso
+            // IMPORTANTE: Mesmo com maior prioridade, devo aguardar master ficar ocioso
+            // Isso evita conflitos de conexão quando o dispositivo de maior prioridade retorna
             if (this.isMasterIdle(cluster)) {
                 console.log(`[Cluster] Master ${currentMaster} ocioso há +10min - assumindo controle`);
                 this.syncFromGit().then(() => {
                     this.becomeMaster();
                 });
             } else {
-                console.log(`[Cluster] Aguardando master ${currentMaster} ficar ocioso...`);
+                // Master ainda está ativo - aguardar pacientemente
+                console.log(`[Cluster] Master ${currentMaster} ainda ativo - aguardando ficar ocioso...`);
                 this.becomeStandby();
             }
         } else {

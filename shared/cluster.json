@@ -9,8 +9,13 @@
     "oracle": {
       "priority": 1,
       "status": "master",
+<<<<<<< Updated upstream
       "lastSeen": "2026-02-07T02:07:24.014Z",
       "lastHeartbeat": "2026-02-07T02:07:24.014Z"
+=======
+      "lastSeen": "2026-02-07T02:13:07.883Z",
+      "lastHeartbeat": "2026-02-07T02:13:07.883Z"
+>>>>>>> Stashed changes
     }
   },
   "dataVersion": 301,
