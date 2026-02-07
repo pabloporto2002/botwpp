@@ -305,8 +305,15 @@ class UserService {
 
     getNameConfirmationMessage(whatsappName) {
         const greeting = this.getGreeting();
+        // Sanitiza o nome antes de perguntar
+        const cleanName = this.sanitizeName(whatsappName);
+        if (!cleanName) {
+            // Nome inválido/vazio - pede direto
+            return `👋 ${greeting}! Tudo bem?\n\n` +
+                `Como prefere que eu te chame? 😊`;
+        }
         return `👋 ${greeting}! Tudo bem?\n\n` +
-            `Posso te chamar de *${whatsappName}*? 🤔\n\n` +
+            `Posso te chamar de *${cleanName}*? 🤔\n\n` +
             `Responda *SIM* ou *NÃO*`;
     }
 
