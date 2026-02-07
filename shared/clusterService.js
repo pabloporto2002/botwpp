@@ -13,7 +13,7 @@ const { execSync, exec } = require('child_process');
 
 const CLUSTER_FILE = path.join(__dirname, 'cluster.json');
 const HEARTBEAT_INTERVAL = 10000; // 10 segundos
-const DEAD_THRESHOLD = 30000; // 30 segundos sem heartbeat = morto
+const DEAD_THRESHOLD = 180000; // 3 minutos sem heartbeat = morto (precisa ser > sync interval do master)
 const IDLE_TAKEOVER_TIME = 10 * 60 * 1000; // 10 minutos para assumir de dispositivo de menor prioridade
 
 // Intervalos de sync baseados na prioridade (mais alto = menos frequente)
