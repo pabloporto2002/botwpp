@@ -35,6 +35,7 @@ class ClusterService {
         this.checkTimer = null;
         this.lastDataVersion = 0; // Para detectar mudanças remotas
         this.hasLocalChanges = false; // Flag para detectar mudanças locais
+        this.onBecomeMaster = null; // Callback chamado quando vira master
 
         // Calcula intervalo de sync baseado na prioridade
         this.syncInterval = SYNC_INTERVALS[this.priority] || SYNC_INTERVALS[99];
@@ -162,9 +163,17 @@ class ClusterService {
         cluster.devices[this.deviceId].status = 'master';
 
         this.saveCluster(cluster);
+
+        const wasMaster = this.isMaster;
         this.isMaster = true;
 
         console.log(`[Cluster] ⭐ ${this.deviceId} ASSUMIU como MASTER!`);
+
+        // Dispara callback se virou master agora (e não era antes)
+        if (!wasMaster && this.onBecomeMaster) {
+            console.log('[Cluster] Disparando callback onBecomeMaster...');
+            this.onBecomeMaster();
+        }
     }
 
     /**

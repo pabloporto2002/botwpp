@@ -418,9 +418,7 @@ async function connectToWhatsApp() {
 
             cleanupQrCode();
 
-            // Inicia serviço de cluster para coordenação multi-dispositivo
-            await clusterService.start();
-            console.log(`[Cluster] Status: ${clusterService.isMaster ? 'MASTER' : 'STANDBY'}`);
+            // Nota: cluster já foi iniciado em main() antes de conectar
 
             // Só busca grupos se ainda não tiver um salvo
             if (!learningService.hasAdminGroup()) {
@@ -843,4 +841,28 @@ async function connectToWhatsApp() {
 }
 
 console.log('[Bot] Inicializando com Sistema de Aprendizado...');
-connectToWhatsApp();
+
+/**
+ * Inicialização principal - verifica cluster antes de conectar
+ */
+async function main() {
+    // 1. Inicia serviço de cluster PRIMEIRO para saber se é master ou standby
+    console.log('[Cluster] Verificando status do cluster...');
+    await clusterService.start();
+
+    if (clusterService.isMaster) {
+        console.log('[Cluster] Este dispositivo é MASTER - conectando ao WhatsApp...');
+        connectToWhatsApp();
+    } else {
+        console.log('[Cluster] Este dispositivo é STANDBY - aguardando vez...');
+        console.log('[Cluster] Monitorando cluster para failover automático...');
+
+        // Configura callback para quando virar master
+        clusterService.onBecomeMaster = () => {
+            console.log('[Cluster] ASSUMINDO COMO MASTER! Conectando ao WhatsApp...');
+            connectToWhatsApp();
+        };
+    }
+}
+
+main();
