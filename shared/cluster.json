@@ -3,7 +3,7 @@
     "device": "oracle",
     "startedAt": "2026-02-07T03:02:39.270Z",
     "lastHeartbeat": "2026-02-07T03:02:39.270Z",
-    "lastMessageAt": "2026-02-07T11:12:24.905Z"
+    "lastMessageAt": "2026-02-07T12:58:32.362Z"
   },
   "devices": {
     "pc": {
@@ -15,10 +15,10 @@
     "oracle": {
       "priority": 1,
       "status": "master",
-      "lastSeen": "2026-02-07T12:56:57.486Z",
-      "lastHeartbeat": "2026-02-07T12:56:57.486Z"
+      "lastSeen": "2026-02-07T12:58:57.554Z",
+      "lastHeartbeat": "2026-02-07T12:58:57.554Z"
     }
   },
-  "dataVersion": 1219,
-  "lastSync": "2026-02-07T12:57:03.184Z"
+  "dataVersion": 1220,
+  "lastSync": "2026-02-07T12:59:03.186Z"
 }
