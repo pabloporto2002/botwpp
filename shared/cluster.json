@@ -1,24 +1,24 @@
 {
   "master": {
-    "device": "oracle",
-    "startedAt": "2026-02-07T03:02:39.270Z",
-    "lastHeartbeat": "2026-02-07T03:02:39.270Z",
-    "lastMessageAt": "2026-02-07T13:29:42.660Z"
+    "device": "pc",
+    "startedAt": "2026-02-07T13:59:43.401Z",
+    "lastHeartbeat": "2026-02-07T13:59:43.401Z",
+    "lastMessageAt": null
   },
   "devices": {
     "pc": {
       "priority": 2,
-      "status": "offline",
-      "lastSeen": "2026-02-07T02:37:39.301Z",
-      "lastHeartbeat": "2026-02-07T02:37:39.301Z"
+      "status": "master",
+      "lastSeen": "2026-02-07T13:59:41.408Z",
+      "lastHeartbeat": "2026-02-07T13:59:41.408Z"
     },
     "oracle": {
       "priority": 1,
-      "status": "master",
+      "status": "standby",
       "lastSeen": "2026-02-07T13:48:00.314Z",
       "lastHeartbeat": "2026-02-07T13:48:00.314Z"
     }
   },
-  "dataVersion": 1244,
-  "lastSync": "2026-02-07T13:48:09.353Z"
+  "dataVersion": 1245,
+  "lastSync": "2026-02-07T13:59:43.477Z"
 }
