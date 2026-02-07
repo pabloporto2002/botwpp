@@ -15,7 +15,14 @@ const CLUSTER_FILE = path.join(__dirname, 'cluster.json');
 const HEARTBEAT_INTERVAL = 10000; // 10 segundos
 const DEAD_THRESHOLD = 30000; // 30 segundos sem heartbeat = morto
 const IDLE_TAKEOVER_TIME = 10 * 60 * 1000; // 10 minutos para assumir de dispositivo de menor prioridade
-const SYNC_INTERVAL = 60000; // 1 minuto para sync
+
+// Intervalos de sync baseados na prioridade (mais alto = menos frequente)
+const SYNC_INTERVALS = {
+    1: 2 * 60 * 1000,   // Oracle: 2 min
+    2: 3 * 60 * 1000,   // PC: 3 min
+    3: 10 * 60 * 1000,  // Celular: 10 min
+    99: 5 * 60 * 1000   // Default: 5 min
+};
 
 class ClusterService {
     constructor() {
@@ -26,8 +33,13 @@ class ClusterService {
         this.heartbeatTimer = null;
         this.syncTimer = null;
         this.checkTimer = null;
+        this.lastDataVersion = 0; // Para detectar mudanças remotas
+        this.hasLocalChanges = false; // Flag para detectar mudanças locais
 
-        console.log(`[Cluster] Inicializando dispositivo: ${this.deviceId} (prioridade: ${this.priority})`);
+        // Calcula intervalo de sync baseado na prioridade
+        this.syncInterval = SYNC_INTERVALS[this.priority] || SYNC_INTERVALS[99];
+
+        console.log(`[Cluster] Inicializando dispositivo: ${this.deviceId} (prioridade: ${this.priority}, sync: ${this.syncInterval / 1000}s)`);
     }
 
     /**
@@ -172,55 +184,70 @@ class ClusterService {
     }
 
     /**
-     * Sincroniza dados do GitHub
+     * Sincroniza dados do GitHub (apenas se houver mudanças remotas)
      */
     async syncFromGit() {
         return new Promise((resolve) => {
-            console.log('[Cluster] Sincronizando dados do GitHub...');
-
-            exec('git pull origin main', { cwd: path.join(__dirname, '..') }, (error, stdout, stderr) => {
-                if (error) {
-                    console.error('[Cluster] Erro no git pull:', error.message);
-                    resolve(false);
+            // Primeiro verifica se há mudanças remotas
+            exec('git fetch origin main && git diff --quiet HEAD origin/main', { cwd: path.join(__dirname, '..') }, (error) => {
+                if (!error) {
+                    // Sem mudanças remotas
+                    resolve(true);
                     return;
                 }
 
-                if (stdout.includes('Already up to date')) {
-                    console.log('[Cluster] Dados já atualizados');
-                } else {
-                    console.log('[Cluster] Dados sincronizados:', stdout.trim());
-                }
-
-                resolve(true);
+                // Há mudanças, faz pull
+                console.log('[Cluster] Detectadas mudanças remotas, sincronizando...');
+                exec('git pull origin main', { cwd: path.join(__dirname, '..') }, (pullError, stdout) => {
+                    if (pullError) {
+                        console.error('[Cluster] Erro no git pull:', pullError.message);
+                        resolve(false);
+                        return;
+                    }
+                    console.log('[Cluster] Dados sincronizados');
+                    resolve(true);
+                });
             });
         });
     }
 
     /**
-     * Envia dados para o GitHub (apenas master)
+     * Envia dados para o GitHub (apenas master, apenas se houver mudanças)
      */
     async syncToGit() {
-        if (!this.isMaster) return;
+        if (!this.isMaster) return true;
 
         return new Promise((resolve) => {
-            const commands = [
-                'git add shared/*.json',
-                'git diff --cached --quiet || git commit -m "auto-sync: cluster data update"',
-                'git push origin main'
-            ].join(' && ');
-
-            exec(commands, { cwd: path.join(__dirname, '..') }, (error, stdout, stderr) => {
-                if (error && !error.message.includes('nothing to commit')) {
-                    console.error('[Cluster] Erro no git push:', error.message);
-                    resolve(false);
+            // Primeiro verifica se há mudanças locais
+            exec('git status --porcelain shared/', { cwd: path.join(__dirname, '..') }, (error, stdout) => {
+                if (!stdout || stdout.trim() === '') {
+                    // Sem mudanças locais
+                    resolve(true);
                     return;
                 }
 
-                if (stdout && !stdout.includes('nothing to commit')) {
-                    console.log('[Cluster] Dados enviados para GitHub');
-                }
+                // Incrementa versão de dados
+                const cluster = this.loadCluster();
+                cluster.dataVersion = (cluster.dataVersion || 0) + 1;
+                cluster.lastSync = new Date().toISOString();
+                this.saveCluster(cluster);
 
-                resolve(true);
+                console.log('[Cluster] Enviando mudanças para GitHub...');
+                const commands = [
+                    'git add shared/*.json baileys/auth_*/',
+                    'git commit -m "auto-sync: data v' + cluster.dataVersion + '"',
+                    'git push origin main'
+                ].join(' && ');
+
+                exec(commands, { cwd: path.join(__dirname, '..') }, (pushError) => {
+                    if (pushError && !pushError.message.includes('nothing to commit')) {
+                        console.error('[Cluster] Erro no git push:', pushError.message);
+                        resolve(false);
+                        return;
+                    }
+                    console.log(`[Cluster] Dados v${cluster.dataVersion} enviados`);
+                    resolve(true);
+                });
             });
         });
     }
@@ -327,14 +354,14 @@ class ClusterService {
             this.checkClusterStatus();
         }, HEARTBEAT_INTERVAL * 3); // A cada 30s
 
-        // Inicia sync periódico
+        // Inicia sync periódico (baseado na prioridade do dispositivo)
         this.syncTimer = setInterval(async () => {
             if (this.isMaster) {
                 await this.syncToGit();
             } else {
                 await this.syncFromGit();
             }
-        }, SYNC_INTERVAL);
+        }, this.syncInterval);
 
         console.log('[Cluster] Serviço iniciado');
         return this.isMaster;
