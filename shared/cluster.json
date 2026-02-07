@@ -1,16 +1,11 @@
 {
-  "master": {
-    "device": "pc",
-    "startedAt": "2026-02-07T02:33:39.141Z",
-    "lastHeartbeat": "2026-02-07T02:33:39.141Z",
-    "lastMessageAt": null
-  },
+  "master": null,
   "devices": {
     "pc": {
       "priority": 2,
-      "status": "master",
-      "lastSeen": "2026-02-07T02:36:39.256Z",
-      "lastHeartbeat": "2026-02-07T02:36:39.256Z"
+      "status": "offline",
+      "lastSeen": "2026-02-07T02:37:39.301Z",
+      "lastHeartbeat": "2026-02-07T02:37:39.301Z"
     }
   },
   "dataVersion": 1002,
