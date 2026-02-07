@@ -1,0 +1,88 @@
+{
+  "users": {
+    "238014286528719@lid": {
+      "name": "Pablo",
+      "whatsappName": "Pablo",
+      "confirmedAt": "2026-02-06T01:36:22.562Z",
+      "lastInteraction": "2026-02-06T01:36:22.562Z"
+    },
+    "238014286528719": {
+      "name": "Pablo",
+      "whatsappName": "Pablo",
+      "confirmedAt": "2026-02-06T02:19:57.161Z",
+      "lastInteraction": "2026-02-06T23:32:21.111Z"
+    },
+    "188373171986481": {
+      "name": "Sandro",
+      "whatsappName": "Sandro",
+      "confirmedAt": "2026-02-06T02:45:34.393Z",
+      "lastInteraction": "2026-02-06T02:45:34.393Z"
+    },
+    "136786168778915": {
+      "name": "Joana",
+      "whatsappName": "Joana Silva Lopes",
+      "confirmedAt": "2026-02-06T16:05:21.108Z",
+      "lastInteraction": "2026-02-06T16:05:21.108Z"
+    },
+    "179414289612948": {
+      "name": "Pv Midias",
+      "whatsappName": "PV Midias",
+      "confirmedAt": "2026-02-06T16:07:26.427Z",
+      "lastInteraction": "2026-02-06T16:07:26.427Z"
+    },
+    "230253951713479": {
+      "name": "Caio",
+      "whatsappName": "Caio",
+      "confirmedAt": "2026-02-06T16:55:18.023Z",
+      "lastInteraction": "2026-02-06T17:14:35.372Z"
+    },
+    "71228358414437": {
+      "name": "Arthur",
+      "whatsappName": "Arthur Scharra",
+      "confirmedAt": "2026-02-06T17:01:54.618Z",
+      "lastInteraction": "2026-02-06T17:02:05.840Z"
+    },
+    "122484078735606": {
+      "name": "Lays",
+      "whatsappName": "Lays",
+      "confirmedAt": "2026-02-06T18:49:39.012Z",
+      "lastInteraction": "2026-02-06T19:18:32.029Z"
+    },
+    "195408160681989": {
+      "name": "Jorge",
+      "whatsappName": "Jorge",
+      "confirmedAt": "2026-02-06T19:37:47.385Z",
+      "lastInteraction": "2026-02-06T19:38:00.535Z"
+    },
+    "241695090286708": {
+      "name": "Kaylainne",
+      "whatsappName": "Kaylainne Cardeira",
+      "confirmedAt": "2026-02-06T21:38:26.263Z",
+      "lastInteraction": "2026-02-06T21:39:25.966Z"
+    },
+    "232336406921469": {
+      "name": "Maria",
+      "whatsappName": "Maria",
+      "confirmedAt": "2026-02-06T21:46:26.691Z",
+      "lastInteraction": "2026-02-06T22:23:57.354Z"
+    },
+    "8530341921004": {
+      "name": "Ferreira",
+      "whatsappName": "N Ferreira",
+      "confirmedAt": "2026-02-06T22:55:11.988Z",
+      "lastInteraction": "2026-02-06T22:57:41.801Z"
+    },
+    "266571792560168": {
+      "name": "Ully",
+      "whatsappName": "ULLY SOUSA 🌻",
+      "confirmedAt": "2026-02-06T22:56:06.727Z",
+      "lastInteraction": "2026-02-06T22:56:25.861Z"
+    },
+    "259257865904161": {
+      "name": "Micael",
+      "whatsappName": "Micael Carvalho 😍",
+      "confirmedAt": "2026-02-06T23:19:52.961Z",
+      "lastInteraction": "2026-02-06T23:32:37.512Z"
+    }
+  }
+}

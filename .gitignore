@@ -1,31 +1,21 @@
-# Dependências
+# Dependências (muito grandes, cada ambiente baixa)
 node_modules/
 package-lock.json
 
-# Arquivos de ambiente (SENSÍVEIS - NÃO COMMITAR!)
-.env
-
-# Base de dados de usuários (PRIVACIDADE!)
-shared/usersDatabase.json
-
-# Pastas de autenticação do WhatsApp (SENSÍVEIS!)
-auth_*/
-baileys/auth_*/
-
-# QR Codes gerados
-*.jpg
+# QR Codes gerados (temporário)
 qrcode.jpg
 qrcode.png
 
-# Logs
+# Logs (específicos de cada ambiente)
 *.log
 npm-debug.log*
+logs/
 
-# Sistema
+# Sistema (lixo do SO)
 .DS_Store
 Thumbs.db
 
-# IDEs
+# IDEs (configurações pessoais)
 .vscode/
 .idea/
 
@@ -33,13 +23,12 @@ Thumbs.db
 *.tmp
 *.temp
 
-# Resultados de exploração (opcional - pode remover se quiser versionar)
-flowchart_result.json
-flowchart_result.md
-
 # Brain do Antigravity (IDE)
 .gemini/
 
 # Chave SSH Oracle Cloud (NUNCA commitar!)
 *.key
 .key
+
+# Imagem de QR temporário baixado do Oracle
+oracle-qrcode.jpg
