@@ -15,10 +15,10 @@
     "oracle": {
       "priority": 1,
       "status": "master",
-      "lastSeen": "2026-02-07T06:59:36.110Z",
-      "lastHeartbeat": "2026-02-07T06:59:36.110Z"
+      "lastSeen": "2026-02-07T07:01:36.173Z",
+      "lastHeartbeat": "2026-02-07T07:01:36.173Z"
     }
   },
-  "dataVersion": 1085,
-  "lastSync": "2026-02-07T06:59:45.032Z"
+  "dataVersion": 1086,
+  "lastSync": "2026-02-07T07:01:45.038Z"
 }
