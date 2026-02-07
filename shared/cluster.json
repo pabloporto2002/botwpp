@@ -1,13 +1,18 @@
 {
-  "master": null,
+  "master": {
+    "device": "pc",
+    "startedAt": "2026-02-07T01:18:22.759Z",
+    "lastHeartbeat": "2026-02-07T01:18:22.759Z",
+    "lastMessageAt": "2026-02-07T01:18:42.884Z"
+  },
   "devices": {
     "pc": {
       "priority": 2,
-      "status": "offline",
-      "lastSeen": "2026-02-07T01:18:08.719Z",
-      "lastHeartbeat": "2026-02-07T01:18:08.719Z"
+      "status": "master",
+      "lastSeen": "2026-02-07T01:22:29.870Z",
+      "lastHeartbeat": "2026-02-07T01:22:29.870Z"
     }
   },
-  "dataVersion": 2,
-  "lastSync": "2026-02-07T01:17:48.670Z"
+  "dataVersion": 3,
+  "lastSync": "2026-02-07T01:22:29.833Z"
 }
