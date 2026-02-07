@@ -213,13 +213,16 @@ class ClusterService {
 
     /**
      * Envia dados para o GitHub (apenas master, apenas se houver mudanças)
+     * Compatível com Windows e Linux
      */
     async syncToGit() {
         if (!this.isMaster) return true;
 
+        const projectRoot = path.join(__dirname, '..');
+
         return new Promise((resolve) => {
             // Primeiro verifica se há mudanças locais
-            exec('git status --porcelain shared/', { cwd: path.join(__dirname, '..') }, (error, stdout) => {
+            exec('git status --porcelain shared/', { cwd: projectRoot }, (error, stdout) => {
                 if (!stdout || stdout.trim() === '') {
                     // Sem mudanças locais
                     resolve(true);
@@ -233,20 +236,36 @@ class ClusterService {
                 this.saveCluster(cluster);
 
                 console.log('[Cluster] Enviando mudanças para GitHub...');
-                const commands = [
-                    'git add shared/*.json baileys/auth_*/',
-                    'git commit -m "auto-sync: data v' + cluster.dataVersion + '"',
-                    'git push origin main'
-                ].join(' && ');
 
-                exec(commands, { cwd: path.join(__dirname, '..') }, (pushError) => {
-                    if (pushError && !pushError.message.includes('nothing to commit')) {
-                        console.error('[Cluster] Erro no git push:', pushError.message);
+                // Passo 1: git add shared/*.json
+                exec('git add shared/*.json', { cwd: projectRoot }, (addErr) => {
+                    if (addErr) {
+                        console.error('[Cluster] Erro no git add:', addErr.message);
                         resolve(false);
                         return;
                     }
-                    console.log(`[Cluster] Dados v${cluster.dataVersion} enviados`);
-                    resolve(true);
+
+                    // Passo 2: git commit (pode falhar se não houver nada staged)
+                    const commitMsg = `auto-sync: data v${cluster.dataVersion}`;
+                    exec(`git commit -m "${commitMsg}"`, { cwd: projectRoot }, (commitErr) => {
+                        // Ignora erro de "nothing to commit"
+                        if (commitErr && !commitErr.message.includes('nothing to commit')) {
+                            console.error('[Cluster] Erro no git commit:', commitErr.message);
+                            resolve(false);
+                            return;
+                        }
+
+                        // Passo 3: git push
+                        exec('git push origin main', { cwd: projectRoot }, (pushErr) => {
+                            if (pushErr) {
+                                console.error('[Cluster] Erro no git push:', pushErr.message);
+                                resolve(false);
+                                return;
+                            }
+                            console.log(`[Cluster] Dados v${cluster.dataVersion} enviados`);
+                            resolve(true);
+                        });
+                    });
                 });
             });
         });
