@@ -1,3 +1,6 @@
+# Arquivo de ambiente (CADA DISPOSITIVO PRECISA DO SEU PRÓPRIO!)
+.env
+
 # Dependências (muito grandes, cada ambiente baixa)
 node_modules/
 package-lock.json
