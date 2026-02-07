@@ -278,22 +278,21 @@ class ResponseHandler {
             '_Assim que preencher, nossa equipe entra em contato mais rápido!_';
     }
     /**
-     * Verifica se é seleção de turma específica
+     * Verifica se é seleção de turma específica (por palavras-chave, NÃO por número)
+     * Números 1/2 são tratados no contexto de userState 'selecting_turma' em processMessage
      */
     checkTurmaSelection(message) {
         const normalized = this.normalizeText(message);
-        const trimmed = message.trim();
 
-        // Detecta seleção de turma semanal
-        const semanalTriggers = ['semanal', 'noite', 'noturno', 'segunda', 'semana'];
-        if (trimmed === '1' || semanalTriggers.some(t => normalized.includes(t))) {
-            // Verifica se está no contexto de turmas (último estado)
+        // Detecta seleção de turma semanal por palavras-chave apenas
+        const semanalTriggers = ['semanal', 'noturno', 'segunda a sexta'];
+        if (semanalTriggers.some(t => normalized.includes(t))) {
             return this.respostas.mensagens?.turma_semanal || null;
         }
 
-        // Detecta seleção de turma sábado
+        // Detecta seleção de turma sábado por palavras-chave apenas
         const sabadoTriggers = ['sabado', 'sábado', 'sabados', 'sábados', 'fim de semana'];
-        if (trimmed === '2' || sabadoTriggers.some(t => normalized.includes(t))) {
+        if (sabadoTriggers.some(t => normalized.includes(t))) {
             return this.respostas.mensagens?.turma_sabado || null;
         }
 
