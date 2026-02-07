@@ -116,12 +116,21 @@ class ClusterService {
     }
 
     /**
-     * Verifica se o master atual está ocioso (sem mensagens há muito tempo)
+     * Verifica se o master atual está ocioso (sem atividade há muito tempo)
+     * Usa lastMessageAt se disponível, senão usa lastHeartbeat ou startedAt
      */
     isMasterIdle(cluster) {
-        if (!cluster.master || !cluster.master.lastMessageAt) return true;
-        const lastMsg = new Date(cluster.master.lastMessageAt).getTime();
-        return (Date.now() - lastMsg) > IDLE_TAKEOVER_TIME;
+        if (!cluster.master) return true;
+
+        // Usa mensagem mais recente, ou heartbeat, ou startedAt como referência
+        const lastActivity = cluster.master.lastMessageAt ||
+            cluster.master.lastHeartbeat ||
+            cluster.master.startedAt;
+
+        if (!lastActivity) return true;
+
+        const lastTime = new Date(lastActivity).getTime();
+        return (Date.now() - lastTime) > IDLE_TAKEOVER_TIME;
     }
 
     /**
