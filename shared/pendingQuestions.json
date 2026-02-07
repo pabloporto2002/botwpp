@@ -79,6 +79,14 @@
       "question": "A cliente Maria mencionou que 'N tenho cartão no momento' ao ser informada sobre o parcelamento. Quais são as opções de pagamento alternativas para matrícula e parcelamento do curso PMERJ 2026 (ex: boleto, PIX, débito, dinheiro)?",
       "timestamp": "2026-02-06T22:24:10.932Z",
       "status": "answered"
+    },
+    {
+      "id": "m1w2aenm",
+      "clientJid": "99411917070361@lid",
+      "clientName": "Jessica",
+      "question": "Quais são as matérias específicas abordadas no curso preparatório da PMERJ 2026?",
+      "timestamp": "2026-02-07T13:16:52.556Z",
+      "status": "pending"
     }
   ]
 }
