@@ -8,11 +8,11 @@
   "devices": {
     "pc": {
       "priority": 2,
-      "status": "master",
-      "lastSeen": "2026-02-07T01:28:27.248Z",
-      "lastHeartbeat": "2026-02-07T01:28:27.248Z"
+      "status": "starting",
+      "lastSeen": "2026-02-07T01:28:29.459Z",
+      "lastHeartbeat": "2026-02-07T01:28:29.459Z"
     }
   },
-  "dataVersion": 57,
-  "lastSync": "2026-02-07T01:28:27.215Z"
+  "dataVersion": 58,
+  "lastSync": "2026-02-07T01:28:29.634Z"
 }
