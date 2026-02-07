@@ -22,7 +22,21 @@ const responseHandler = require('../shared/responseHandler');
 const learningService = require('../shared/learningService');
 const userService = require('../shared/userService');
 const conversationService = require('../shared/conversationService');
-const clusterService = require('../shared/clusterService');
+
+// ==========================================
+// HANDLERS DE ERROS (NÃO fazem exit - bot nunca crasha)
+// ==========================================
+process.on('uncaughtException', (error) => {
+    console.error('[ERRO] Uncaught Exception:', error.message);
+    console.error(error.stack);
+    // NÃO faz exit - apenas loga e continua rodando
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('[ERRO] Unhandled Rejection at:', promise);
+    console.error('Reason:', reason);
+    // NÃO faz exit - apenas loga e continua rodando
+});
 
 const sessionName = process.env.SESSION_NAME || 'silfer-bot';
 const authFolder = `./auth_${sessionName}`;
@@ -284,9 +298,6 @@ async function sendMessage(jid, text) {
 
         // Envia a mensagem
         await sock.sendMessage(jid, { text });
-
-        // Registra atividade no cluster (para detecção de ociosidade)
-        clusterService.recordMessageActivity();
 
         // Para de "digitar"
         await sock.sendPresenceUpdate('paused', jid);
@@ -565,14 +576,6 @@ async function connectToWhatsApp() {
                 return;
             }
 
-            // ==========================================
-            // VERIFICA SE É MASTER (CLUSTER)
-            // ==========================================
-            if (!clusterService.canRespond()) {
-                console.log('[Cluster] Em modo STANDBY - não respondendo');
-                return;
-            }
-
             // Verifica se humano assumiu esta conversa (admin respondeu nos últimos 5 min)
             if (isHumanTakeover(from)) {
                 console.log(`[Takeover] Bot silenciado - humano está atendendo ${from.split('@')[0]}`);
@@ -834,35 +837,12 @@ async function connectToWhatsApp() {
 
     process.on('SIGINT', async () => {
         console.log('\n[Bot] Encerrando...');
-        clusterService.stop(); // Para o serviço de cluster
         if (sock) sock.end();
         process.exit(0);
     });
 }
 
-console.log('[Bot] Inicializando com Sistema de Aprendizado...');
+console.log('[Bot] Inicializando Bot WhatsApp Silfer (Oracle 24/7)...');
 
-/**
- * Inicialização principal - verifica cluster antes de conectar
- */
-async function main() {
-    // 1. Inicia serviço de cluster PRIMEIRO para saber se é master ou standby
-    console.log('[Cluster] Verificando status do cluster...');
-    await clusterService.start();
-
-    if (clusterService.isMaster) {
-        console.log('[Cluster] Este dispositivo é MASTER - conectando ao WhatsApp...');
-        connectToWhatsApp();
-    } else {
-        console.log('[Cluster] Este dispositivo é STANDBY - aguardando vez...');
-        console.log('[Cluster] Monitorando cluster para failover automático...');
-
-        // Configura callback para quando virar master
-        clusterService.onBecomeMaster = () => {
-            console.log('[Cluster] ASSUMINDO COMO MASTER! Conectando ao WhatsApp...');
-            connectToWhatsApp();
-        };
-    }
-}
-
-main();
+// Conecta diretamente - sem sistema de cluster
+connectToWhatsApp();

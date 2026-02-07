@@ -1,0 +1,31 @@
+# Arquivo de serviço systemd para Oracle Linux
+# Inicia o bot automaticamente no boot
+#
+# Comandos:
+#   sudo cp silfer-bot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable silfer-bot
+#   sudo systemctl start silfer-bot
+#   sudo systemctl status silfer-bot
+#   sudo journalctl -u silfer-bot -f  (ver logs)
+
+[Unit]
+Description=Silfer Bot WhatsApp
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opc
+WorkingDirectory=/home/opc/botwpp/baileys
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/home/opc/botwpp/bot.log
+StandardError=append:/home/opc/botwpp/bot.log
+
+# Variáveis de ambiente
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

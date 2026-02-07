@@ -45,7 +45,8 @@ class GeminiService {
      */
     getNextClient() {
         if (this.clients.length === 0) {
-            throw new Error('Nenhuma chave de API configurada');
+            console.error('[GeminiService] ERRO: Nenhuma chave de API configurada!');
+            return null; // Retorna null em vez de throw para não crashar
         }
 
         const client = this.clients[this.currentKeyIndex];
@@ -63,6 +64,12 @@ class GeminiService {
     async generateResponse(userMessage) {
         try {
             const client = this.getNextClient();
+
+            // Se não há cliente disponível, retorna fallback
+            if (!client) {
+                return 'Desculpe, estou com dificuldades técnicas no momento. Por favor, digite MENU para ver as opções ou aguarde um atendente.';
+            }
+
             const model = client.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
             const systemPrompt = respostas.systemPrompt ||
