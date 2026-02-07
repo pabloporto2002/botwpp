@@ -363,11 +363,11 @@ class ClusterService {
     async start() {
         console.log('[Cluster] Iniciando serviço de cluster...');
 
-        // Registra dispositivo
-        this.registerDevice();
-
-        // Sincroniza dados primeiro
+        // IMPORTANTE: Sincroniza dados PRIMEIRO para saber quem é master
         await this.syncFromGit();
+
+        // Depois registra este dispositivo (preserva o master atual se houver)
+        this.registerDevice();
 
         // Verifica status inicial
         this.checkClusterStatus();
