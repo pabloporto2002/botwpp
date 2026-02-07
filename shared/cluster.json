@@ -4,10 +4,10 @@
     "pc": {
       "priority": 2,
       "status": "offline",
-      "lastSeen": "2026-02-07T01:13:59.240Z",
-      "lastHeartbeat": "2026-02-07T01:13:59.240Z"
+      "lastSeen": "2026-02-07T01:18:08.719Z",
+      "lastHeartbeat": "2026-02-07T01:18:08.719Z"
     }
   },
-  "dataVersion": 1,
-  "lastSync": null
+  "dataVersion": 2,
+  "lastSync": "2026-02-07T01:17:48.670Z"
 }
