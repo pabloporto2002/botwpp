@@ -22,6 +22,7 @@ const responseHandler = require('../shared/responseHandler');
 const learningService = require('../shared/learningService');
 const userService = require('../shared/userService');
 const conversationService = require('../shared/conversationService');
+const clusterService = require('../shared/clusterService');
 
 const sessionName = process.env.SESSION_NAME || 'silfer-bot';
 const authFolder = `./auth_${sessionName}`;
@@ -284,6 +285,9 @@ async function sendMessage(jid, text) {
         // Envia a mensagem
         await sock.sendMessage(jid, { text });
 
+        // Registra atividade no cluster (para detecção de ociosidade)
+        clusterService.recordMessageActivity();
+
         // Para de "digitar"
         await sock.sendPresenceUpdate('paused', jid);
     } catch (err) {
@@ -413,6 +417,10 @@ async function connectToWhatsApp() {
             console.log('========================================\n');
 
             cleanupQrCode();
+
+            // Inicia serviço de cluster para coordenação multi-dispositivo
+            await clusterService.start();
+            console.log(`[Cluster] Status: ${clusterService.isMaster ? 'MASTER' : 'STANDBY'}`);
 
             // Só busca grupos se ainda não tiver um salvo
             if (!learningService.hasAdminGroup()) {
@@ -556,6 +564,14 @@ async function connectToWhatsApp() {
             // Ignora mensagens de grupos (a menos que seja resposta admin acima)
             if (from.includes('@g.us')) {
                 console.log('[Bot] Mensagem de grupo ignorada');
+                return;
+            }
+
+            // ==========================================
+            // VERIFICA SE É MASTER (CLUSTER)
+            // ==========================================
+            if (!clusterService.canRespond()) {
+                console.log('[Cluster] Em modo STANDBY - não respondendo');
                 return;
             }
 
@@ -820,6 +836,7 @@ async function connectToWhatsApp() {
 
     process.on('SIGINT', async () => {
         console.log('\n[Bot] Encerrando...');
+        clusterService.stop(); // Para o serviço de cluster
         if (sock) sock.end();
         process.exit(0);
     });
