@@ -169,6 +169,10 @@ class ClusterService {
 
         console.log(`[Cluster] ⭐ ${this.deviceId} ASSUMIU como MASTER!`);
 
+        // IMPORTANTE: Faz sync imediato para o GitHub para que outros dispositivos vejam
+        console.log('[Cluster] Sincronizando status de master para GitHub...');
+        this.syncToGit();
+
         // Dispara callback se virou master agora (e não era antes)
         if (!wasMaster && this.onBecomeMaster) {
             console.log('[Cluster] Disparando callback onBecomeMaster...');

@@ -1,6 +1,18 @@
 {
-  "master": null,
-  "devices": {},
+  "master": {
+    "device": "pc",
+    "startedAt": "2026-02-07T02:18:19.628Z",
+    "lastHeartbeat": "2026-02-07T02:18:19.628Z",
+    "lastMessageAt": null
+  },
+  "devices": {
+    "pc": {
+      "priority": 2,
+      "status": "master",
+      "lastSeen": "2026-02-07T02:20:39.733Z",
+      "lastHeartbeat": "2026-02-07T02:20:39.733Z"
+    }
+  },
   "dataVersion": 500,
   "lastSync": null
 }
