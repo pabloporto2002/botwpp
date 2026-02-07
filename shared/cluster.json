@@ -1,6 +1,13 @@
 {
-    "master": null,
-    "devices": {},
-    "dataVersion": 1,
-    "lastSync": null
+  "master": null,
+  "devices": {
+    "pc": {
+      "priority": 2,
+      "status": "offline",
+      "lastSeen": "2026-02-07T01:13:59.240Z",
+      "lastHeartbeat": "2026-02-07T01:13:59.240Z"
+    }
+  },
+  "dataVersion": 1,
+  "lastSync": null
 }
