@@ -9,8 +9,8 @@
     "pc": {
       "priority": 2,
       "status": "master",
-      "lastSeen": "2026-02-07T14:25:13.459Z",
-      "lastHeartbeat": "2026-02-07T14:25:13.459Z"
+      "lastSeen": "2026-02-07T14:28:13.574Z",
+      "lastHeartbeat": "2026-02-07T14:28:13.574Z"
     },
     "oracle": {
       "priority": 1,
@@ -19,6 +19,6 @@
       "lastHeartbeat": "2026-02-07T13:48:00.314Z"
     }
   },
-  "dataVersion": 1248,
-  "lastSync": "2026-02-07T14:25:23.190Z"
+  "dataVersion": 1249,
+  "lastSync": "2026-02-07T14:28:23.212Z"
 }
